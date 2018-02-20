@@ -42,7 +42,7 @@ Matcher  -> EvtSearchFin      -> Terminal (update list)
 Matcher  -> EvtHeader         -> Terminal (update header)
 */
 
-func BuildChunkList(opts *Options, eventBox* EventBox) *ChunkList {
+func BuildChunkList(opts *Options, eventBox* util.EventBox) *ChunkList {
 	ansiProcessor := func(data []byte) (util.Chars, *[]ansiOffset) {
 		return util.ToChars(data), nil
 	}
