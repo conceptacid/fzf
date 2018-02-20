@@ -102,7 +102,7 @@ func BuildChunkList(opts *Options, eventBox* util.EventBox) *ChunkList {
 // Run starts fzf
 func Run(opts *Options, revision string) {
 	sort := opts.Sort > 0
-	sortCriteria = opts.Criteria
+	SortCriteria = opts.Criteria
 
 	if opts.Version {
 		if len(revision) > 0 {
