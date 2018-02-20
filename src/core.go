@@ -42,24 +42,7 @@ Matcher  -> EvtSearchFin      -> Terminal (update list)
 Matcher  -> EvtHeader         -> Terminal (update header)
 */
 
-// Run starts fzf
-func Run(opts *Options, revision string) {
-	sort := opts.Sort > 0
-	sortCriteria = opts.Criteria
-
-	if opts.Version {
-		if len(revision) > 0 {
-			fmt.Printf("%s (%s)\n", version, revision)
-		} else {
-			fmt.Println(version)
-		}
-		os.Exit(exitOk)
-	}
-
-	// Event channel
-	eventBox := util.NewEventBox()
-
-	// ANSI code processor
+func BuildChunkList(opts *Options, eventBox* EventBox) *ChunkList {
 	ansiProcessor := func(data []byte) (util.Chars, *[]ansiOffset) {
 		return util.ToChars(data), nil
 	}
@@ -81,7 +64,6 @@ func Run(opts *Options, revision string) {
 		}
 	}
 
-	// Chunk list
 	var chunkList *ChunkList
 	var itemIndex int32
 	header := make([]string, 0, opts.HeaderLines)
@@ -114,6 +96,28 @@ func Run(opts *Options, revision string) {
 			return true
 		})
 	}
+	return chunkList;
+}
+
+// Run starts fzf
+func Run(opts *Options, revision string) {
+	sort := opts.Sort > 0
+	sortCriteria = opts.Criteria
+
+	if opts.Version {
+		if len(revision) > 0 {
+			fmt.Printf("%s (%s)\n", version, revision)
+		} else {
+			fmt.Println(version)
+		}
+		os.Exit(exitOk)
+	}
+
+	// Event channel
+	eventBox := util.NewEventBox()
+
+	// Chunk list
+	var chunkList *ChunkList = BuildChunkList(opts, eventBox)
 
 	// Reader
 	streamingFilter := opts.Filter != nil && !sort && !opts.Tac && !opts.Sync
